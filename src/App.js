@@ -3,15 +3,14 @@ import { Container, Grid, Typography, Button, TextField, Card, CardContent, Box,
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ImageIcon from '@mui/icons-material/Image';
 import LinkIcon from '@mui/icons-material/Link';
+import ExampleComponent from './Components/Animations/ExampleComponent';
 
 function App() {
   const [userInput, setUserInput] = useState('');
-  const [aiResponses, setAiResponses] = useState([]); // Array to store history of responses
+  const [aiResponses, setAiResponses] = useState([]);
 
   const handleGenerateResponse = () => {
     const simulatedResponse = `AI Response for "${userInput}"`;
-
-    // Add new response to the top of the array
     setAiResponses((prevResponses) => [simulatedResponse, ...prevResponses]);
   };
 
@@ -22,20 +21,21 @@ function App() {
         <Box
           sx={{
             display: 'inline-block',
-            background: 'linear-gradient(to right, #8E2DE2, #4A00E0)', // Gradient background
+            background: 'linear-gradient(to right, #8E2DE2, #4A00E0)',
             padding: '20px',
             borderRadius: '12px',
             height: '90px',
           }}
         >
           <Typography variant="h4" gutterBottom>
-            <img src='./Images/f3png.png' height={200} alt="f3-digitals" />
+            <img src={`${process.env.PUBLIC_URL}/Images/f3png.png`} height={200} alt="f3-digitals" />
           </Typography>
+
         </Box>
         <Typography color="text.secondary" sx={{ textAlign: 'left' }}>
-          <span style={{ color: 'black', fontSize: '35px', fontWeight: 'bold' }}>Hi There, </span><br />
-          <span style={{ color: 'linear-gradient(to right, #8E2DE2, #4A00E0)', fontSize: '35px', fontWeight: 'bold' }}>What would you like to know?</span>
+          <span style={{ color: 'linear-gradient(to right, #8E2DE2, #4A00E0)', fontSize: '35px', fontWeight: 'bold' }}>Hi There, </span><br />
         </Typography>
+        <ExampleComponent />
       </Box>
 
       {/* AI Suggestions Section */}
@@ -76,15 +76,12 @@ function App() {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  {/* Attachment Button */}
                   <IconButton edge="end" aria-label="add attachment">
                     <AttachFileIcon />
                   </IconButton>
-                  {/* Image Button */}
                   <IconButton edge="end" aria-label="add image">
                     <ImageIcon />
                   </IconButton>
-                  {/* Web Link Button */}
                   <IconButton edge="end" aria-label="add web link">
                     <LinkIcon />
                   </IconButton>
