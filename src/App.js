@@ -4,19 +4,31 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ImageIcon from '@mui/icons-material/Image';
 import LinkIcon from '@mui/icons-material/Link';
 import ExampleComponent from './Components/Animations/ExampleComponent';
+import FileUploadComponent from './Components/Pages/FileUploadComponent';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import apiService from './ApiServices/ApiService';
+
 
 function App() {
   const [userInput, setUserInput] = useState('');
   const [aiResponses, setAiResponses] = useState([]);
 
-  const handleGenerateResponse = () => {
+  const handleGenerateResponse = async () => {
     const simulatedResponse = `AI Response for "${userInput}"`;
-    setAiResponses((prevResponses) => [simulatedResponse, ...prevResponses]);
+    var obj = {
+      "doc_id": "ZRqrTA_20241019143437",
+      "query": simulatedResponse
+    }
+    var response = await apiService.startChat(obj);
+    setAiResponses(response.ai_response);
+    console.log("FA AI Response : ", response);
+    // setAiResponses((prevResponses) => [simulatedResponse, ...prevResponses]);
   };
 
   return (
     <Container maxWidth="md" sx={{ padding: '2rem' }}>
       {/* Header */}
+     
       <Box sx={{ textAlign: 'center', marginBottom: '2rem' }}>
         <Box
           sx={{
@@ -104,24 +116,59 @@ function App() {
       </Grid>
 
       {/* AI Response History Section */}
-      {aiResponses.length > 0 && (
-        <Grid container spacing={3} sx={{ marginTop: '2rem' }}>
-          {aiResponses.map((response, index) => (
-            <Grid item xs={12} key={index}>
-              <Card elevation={3}>
-                <CardContent>
-                  <Typography variant="h6" color="primary" gutterBottom>
-                    AI Response {index + 1}
-                  </Typography>
-                  <Typography variant="body1" color="text.secondary">
-                    {response}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      )}
+{aiResponses.length > 0 && (
+  <Grid container spacing={3} sx={{ marginTop: '2rem' }}>
+    <Grid item xs={12}>
+      <Card elevation={3}>
+        <CardContent>
+          <Typography variant="h6" color="primary" gutterBottom>
+            AI Responses
+          </Typography>
+          {/* Table to display AI Responses */}
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                {/* Dynamically generate table headers based on the first aiResponse keys */}
+                {Object.keys(aiResponses[0]).map((key, index) => (
+                  <th
+                    key={index}
+                    style={{
+                      border: '1px solid #ddd',
+                      padding: '8px',
+                      backgroundColor: '#f2f2f2',
+                      color: '#4A00E0',
+                    }}
+                  >
+                    {key}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {/* Dynamically generate table rows for each aiResponse */}
+              {aiResponses.map((response, rowIndex) => (
+                <tr key={rowIndex}>
+                  {Object.values(response).map((value, colIndex) => (
+                    <td
+                      key={colIndex}
+                      style={{
+                        border: '1px solid #ddd',
+                        padding: '8px',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {value}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </CardContent>
+      </Card>
+    </Grid>
+  </Grid>
+)}
     </Container>
   );
 }
